@@ -1,9 +1,10 @@
+from numpy import insert
 import stdio
 import stddraw
 from tour import Tour
 from point import Point
 
-def insert_common():
+def insertHeuristics():
     # get dimensions
     width = stdio.readInt()
     height = stdio.readInt()
@@ -18,12 +19,12 @@ def insert_common():
         x = stdio.readFloat()
         y = stdio.readFloat()
         p = Point( x, y )
-        # function_to_run( p )
         tour.insertNearest( p )
+        # tour.insertSmallest( p )
 
     # draw to standard draw
-    # tour.draw()
-    # stddraw.show()
+    tour.draw()
+    stddraw.show()
 
     # prtour to standard output
     stdio.writeln( tour )
@@ -37,6 +38,4 @@ if __name__ == "__main__":
     # mona-50k.txt mona-100k.txt    
     # germany15112.txt usa13509.txt
 
-    # tour = Tour()
-    insert_common()
-    # insert_common( tour.insertSmallest )
+    insertHeuristics()
