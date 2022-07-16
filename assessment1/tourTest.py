@@ -19,8 +19,8 @@ def insertHeuristics():
         x = stdio.readFloat()
         y = stdio.readFloat()
         p = Point( x, y )
-        tour.insertNearest( p )
-        # tour.insertSmallest( p )
+        # tour.insertNearest( p )
+        tour.insertSmallest( p )
 
     # draw to standard draw
     tour.draw()
