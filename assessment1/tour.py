@@ -86,19 +86,19 @@ class Tour:
             curr, new_node = self.get_head(), Node( p )
             least_node, least_distance = self.get_head(), float( 'inf' )
 
-        for looping_through_nodes in range( self.size() ):
-            # difference between the two inserts
-            distance_difference = new_node.point.distanceTo( current_node.point )
-            # checking
-            if least_distance is None:
-                least_distance = distance_difference
-            elif distance_difference < least_distance:
-                least_distance = distance_difference
-                least_node = current_node
-            current_node = current_node.next
         # insert the new node
         new_node.next = least_node.next
         least_node.next = new_node
+            # first run
+            difference = new_node.point.distanceTo( curr.point )            
+            if least_distance > difference:
+                least_distance, least_node = difference, curr
+            # loop
+            while curr.next != self.head:
+                curr = curr.next
+                difference = new_node.point.distanceTo( curr.point )
+                if least_distance > difference:
+                    least_distance, least_node = difference, curr
     
 
     # insert p using smallest increase heuristic
@@ -109,26 +109,29 @@ class Tour:
             self.initial_insert( p )
         elif self.size() == 1:
         else:
-            for looping_through_nodes in range( self.size() ):
-                # difference between the two inserts
-                # subtract original distance
-                original_distance = current_node.point.distanceTo( current_node.next.point )
-                # add 2 new distances
-                new_first_distance = current_node.point.distanceTo( new_node.point )
-                new_next_distance = new_node.point.distanceTo( current_node.next.point )
-                # diff distance math
-                distance_difference = new_first_distance + new_next_distance - original_distance
-                if least_distance is None:
-                    least_distance = distance_difference
-                elif distance_difference < least_distance:
-                    # checking
-                    if ( distance_difference < least_distance ):
-                        least_distance = distance_difference
-                        least_node = current_node
-                current_node = current_node.next
             # init
             curr, new_node = self.get_head(), Node( p )
             least_node, least_distance = self.get_head(), float( 'inf' )
+            # first run
+            # difference between the two inserts
+            initial = curr.point.distanceTo( curr.next.point )
+            # subtract original distance, add 2 new distances
+            new_distance = curr.point.distanceTo( new_node.point )
+            new_distance += new_node.point.distanceTo( curr.next.point )
+            difference = new_distance - initial
+            if ( least_distance > difference ):
+                least_distance, least_node = difference, curr
+            # loop
+            while curr.next != self.head:
+                curr = curr.next
+                # difference between the two inserts
+                initial = curr.point.distanceTo( curr.next.point )
+                # subtract original distance, add 2 new distances
+                new_distance = curr.point.distanceTo( new_node.point )
+                new_distance += new_node.point.distanceTo( curr.next.point )
+                difference = new_distance - initial
+                if ( least_distance > difference ):
+                    least_distance, least_node = difference, curr                
             # insert the new node
             new_node.next = least_node.next
             least_node.next = new_node
