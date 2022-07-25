@@ -66,35 +66,25 @@ class Tour:
         return total
     
 
-
-    def insert_core( self, p ):
-        new_node = Node( p )
     ###
     # Heuristics
     ###
 
-        if self.is_empty():
-            self.head = new_node
-            new_node.next = self.get_head()
-            return False
-    
-        least_distance = None
-        least_node = current_node = self.get_head()
-
-        if self.size() == 1:
-            current_node.next = new_node
-            new_node.next = current_node
-            return False
-                
-        return [ new_node, current_node, least_node, least_distance ]
+    def initial_insert( self, p ):
+        new_node = Node( p )
+        self.head = new_node
+        new_node.next = self.head
+        self.count += 1
 
     # insert p using nearest neighbor heuristic
     def insertNearest( self, p ):
-        results = self.insert_core( p )
-        if results is False:
-            return True
+        if self.is_empty():
+            self.initial_insert( p )
+        elif self.size() == 1:
         else:
-            new_node, current_node, least_node, least_distance = results
+            # init
+            curr, new_node = self.get_head(), Node( p )
+            least_node, least_distance = self.get_head(), float( 'inf' )
 
         for looping_through_nodes in range( self.size() ):
             # difference between the two inserts
@@ -109,19 +99,16 @@ class Tour:
         # insert the new node
         new_node.next = least_node.next
         least_node.next = new_node
-        return True
     
 
     # insert p using smallest increase heuristic
+    # insert the new node after every node. subtract distance between the original and original next node
+    # add distance of original node to new node + new node to original next node
     def insertSmallest( self, p ):
-        results = self.insert_core( p )
-        if results is False:
-            return True
+        if self.is_empty():
+            self.initial_insert( p )
+        elif self.size() == 1:
         else:
-            new_node, current_node, least_node, least_distance = results
-
-        # insert the new node after every node. subtract distance between the original and original next node
-        # add distance of original node to new node + new node to original next node
             for looping_through_nodes in range( self.size() ):
                 # difference between the two inserts
                 # subtract original distance
@@ -139,7 +126,9 @@ class Tour:
                         least_distance = distance_difference
                         least_node = current_node
                 current_node = current_node.next
+            # init
+            curr, new_node = self.get_head(), Node( p )
+            least_node, least_distance = self.get_head(), float( 'inf' )
             # insert the new node
             new_node.next = least_node.next
             least_node.next = new_node
-            return True
