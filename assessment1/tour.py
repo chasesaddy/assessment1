@@ -28,54 +28,44 @@ class Tour:
     ###
 
     def toString( self ):
-        fullString = ''
-        current_node = self.get_head()
-        while True:
-            fullString += current_node.point.toString() + '\n '
-            current_node = current_node.next
-            if current_node == self.head:
-                break
-        return fullString
-    
+        if self.is_empty():
+            return ''
+        # init, first run
+        curr = self.get_head()
+        full_string = curr.point.toString() + '\n '
+        # rest
+        while curr.next != self.head:
+            curr = curr.next
+            full_string += curr.point.toString() + '\n '
+                
+        return full_string
+
     # draw the tour to standard draw
     def draw( self ):
         if self.is_empty():
             return False
 
-        current_node = self.get_head()
-        while True:
-            # current_node.point.draw()
-            current_node.point.drawTo( current_node.next.point )
-
-            current_node = current_node.next
-            if current_node == self.get_head():
-                break
-
-
-        count = 0
-        current_node = self.get_head()
-        while True:
-            count += 1
-            current_node = current_node.next
-            if current_node == self.get_head():
-                break
-        return count
-         
+        curr = self.get_head()
+        curr.point.drawTo( curr.next.point )
+        while curr.next != self.get_head():
+            # curr.point.draw()
+            curr = curr.next    
+            curr.point.drawTo( curr.next.point )
+        
     # return the total distance of the tour
     def distance( self ):
         if self.is_empty():
             return 0
+        # init, first run
+        curr = self.get_head()
+        total = curr.point.distanceTo( curr.next.point )
+        # rest
+        while curr.next != self.get_head():
+            curr = curr.next
+            total += curr.point.distanceTo( curr.next.point )
+        return total
+    
 
-        total_distance = 0
-        current_node = self.get_head()
-        while True:
-            total_distance += current_node.point.distanceTo(
-                current_node.next.point
-            )
-            current_node = current_node.next
-            if current_node == self.get_head():
-                break
-        return total_distance
 
     def insert_core( self, p ):
         new_node = Node( p )
