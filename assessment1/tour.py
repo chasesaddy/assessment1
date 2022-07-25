@@ -23,6 +23,7 @@ class Tour:
     def size( self ):
         return self.count
 
+
     ###
     # Looping
     ###
@@ -82,6 +83,7 @@ class Tour:
         insert_point.next = new_node
         self.count += 1
         
+
     # insert p using nearest neighbor heuristic
     def insertNearest( self, p ):
         if self.is_empty():
@@ -103,9 +105,18 @@ class Tour:
                 difference = new_node.point.distanceTo( curr.point )
                 if least_distance > difference:
                     least_distance, least_node = difference, curr
+                
             # insert the new node
             self.insert_at( p, least_node )
     
+
+    def calculate_smallest_diff( self, curr, new_node ):
+        # difference between the two inserts
+        initial = curr.point.distanceTo( curr.next.point )
+        # subtract original distance, add 2 new distances
+        new_distance = curr.point.distanceTo( new_node.point )
+        new_distance += new_node.point.distanceTo( curr.next.point )
+        return new_distance - initial
 
     # insert p using smallest increase heuristic
     # insert the new node after every node. subtract distance between the original and original next node
@@ -120,25 +131,16 @@ class Tour:
             curr, new_node = self.get_head(), Node( p )
             least_node, least_distance = self.get_head(), float( 'inf' )
             # first run
-            # difference between the two inserts
-            initial = curr.point.distanceTo( curr.next.point )
-            # subtract original distance, add 2 new distances
-            new_distance = curr.point.distanceTo( new_node.point )
-            new_distance += new_node.point.distanceTo( curr.next.point )
-            difference = new_distance - initial
+            difference = self.calculate_smallest_diff( curr, new_node )
             if ( least_distance > difference ):
                 least_distance, least_node = difference, curr
             # loop
             while curr.next != self.head:
                 curr = curr.next
-                # difference between the two inserts
-                initial = curr.point.distanceTo( curr.next.point )
-                # subtract original distance, add 2 new distances
-                new_distance = curr.point.distanceTo( new_node.point )
-                new_distance += new_node.point.distanceTo( curr.next.point )
-                difference = new_distance - initial
+                difference = self.calculate_smallest_diff( curr, new_node )
                 if ( least_distance > difference ):
-                    least_distance, least_node = difference, curr                
+                    least_distance, least_node = difference, curr 
+
             # insert the new node
             self.insert_at( p, least_node )
             
