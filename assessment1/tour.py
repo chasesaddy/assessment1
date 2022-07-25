@@ -8,6 +8,7 @@ class Tour:
     # create an empty tour
     def __init__( self ):
         self.head = None
+        self.count = 0
 
     def get_head( self ):
         return self.head
@@ -21,7 +22,6 @@ class Tour:
     # number of points on tour
     def size( self ):
         return self.count
-
 
     ###
     # Looping
@@ -76,19 +76,23 @@ class Tour:
         new_node.next = self.head
         self.count += 1
 
+    def insert_at( self, p, insert_point ):
+        new_node = Node( p )
+        new_node.next = insert_point.next
+        insert_point.next = new_node
+        self.count += 1
+        
     # insert p using nearest neighbor heuristic
     def insertNearest( self, p ):
         if self.is_empty():
             self.initial_insert( p )
         elif self.size() == 1:
+            self.insert_at( p, self.get_head() )
         else:
             # init
             curr, new_node = self.get_head(), Node( p )
             least_node, least_distance = self.get_head(), float( 'inf' )
 
-        # insert the new node
-        new_node.next = least_node.next
-        least_node.next = new_node
             # first run
             difference = new_node.point.distanceTo( curr.point )            
             if least_distance > difference:
@@ -99,6 +103,8 @@ class Tour:
                 difference = new_node.point.distanceTo( curr.point )
                 if least_distance > difference:
                     least_distance, least_node = difference, curr
+            # insert the new node
+            self.insert_at( p, least_node )
     
 
     # insert p using smallest increase heuristic
@@ -108,6 +114,7 @@ class Tour:
         if self.is_empty():
             self.initial_insert( p )
         elif self.size() == 1:
+            self.insert_at( p, self.get_head() )
         else:
             # init
             curr, new_node = self.get_head(), Node( p )
@@ -133,5 +140,5 @@ class Tour:
                 if ( least_distance > difference ):
                     least_distance, least_node = difference, curr                
             # insert the new node
-            new_node.next = least_node.next
-            least_node.next = new_node
+            self.insert_at( p, least_node )
+            
