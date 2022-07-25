@@ -1,6 +1,10 @@
 from node import Node
 
 class Tour:
+    ###
+    # Basics
+    ###
+
     # create an empty tour
     def __init__( self ):
         self.head = None
@@ -13,6 +17,15 @@ class Tour:
             return True
         else:
             return False
+
+    # number of points on tour
+    def size( self ):
+        return self.count
+
+
+    ###
+    # Looping
+    ###
 
     def toString( self ):
         fullString = ''
@@ -38,10 +51,6 @@ class Tour:
             if current_node == self.get_head():
                 break
 
-    # number of points on tour¡
-    def size( self ):
-        if self.is_empty():
-            return 0
 
         count = 0
         current_node = self.get_head()
@@ -70,6 +79,9 @@ class Tour:
 
     def insert_core( self, p ):
         new_node = Node( p )
+    ###
+    # Heuristics
+    ###
 
         if self.is_empty():
             self.head = new_node
